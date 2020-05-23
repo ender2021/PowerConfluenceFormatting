@@ -7,8 +7,14 @@ if(@($publicFiles).Count -gt 0) { $publicFiles.FullName | ForEach-Object { . $_ 
 
 Export-ModuleMember -Function $publicFiles.BaseName
 
+if($null -eq $global:PowerConfluenceFormatting) {
+	$global:PowerConfluenceFormatting = New-Object PowerConfluenceFormatting @($Emoticons,$Templates)
+}
+
 $onRemove = {
-	
+	if ($global:PowerConfluenceFormatting) {
+		Remove-Variable -Name PowerConfluenceFormatting -Scope global
+	}
 }
 
 $ExecutionContext.SessionState.Module.OnRemove += $onRemove
